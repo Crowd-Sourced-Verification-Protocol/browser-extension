@@ -72,7 +72,7 @@ const Landing = () => {
       "rating": rate,
     }
     console.log(data)
-    /*try{
+    try{
       const response = await axios({
         url: `https://icdrive-backend.herokuapp.com/addRating`,
         method:"POST",
@@ -85,7 +85,7 @@ const Landing = () => {
       setRate(0)
     } catch(error){
       console.log(error)
-    }*/
+    }
   }
 
   return (
