@@ -31,6 +31,7 @@ const Report = ({setReportFlag, id}) => {
       "url": window.location.href,
       "reasonType": value
     }
+    console.log(data)
     try{
       const response = await axios({
         url: `https://icdrive-backend.herokuapp.com/addReport`,
@@ -58,7 +59,7 @@ const Report = ({setReportFlag, id}) => {
             <Radio value={4}>Copyright</Radio>
             <Radio value={5}>
               More...
-              {value === 5 ? <Input text={text} onChange={setText} style={{ width: 100, marginLeft: 10 }} /> : null}
+              {value === 5 ? <Input text={text} onChange={(e)=>setText(e.target.value)} style={{ width: 100, marginLeft: 10 }} /> : null}
             </Radio>
           </Space>
         </Radio.Group>

@@ -36,34 +36,18 @@ const Landing = () => {
     console.log(data)
     if(!data){
       data = getRandomToken()
-      console.log(data)
       setStorageData(data)
+      const response = await axios({
+        url: `https://icdrive-backend.herokuapp.com/addUser`,
+        method:"POST",
+        headers:{
+          'Content-Type': 'application/json;charset=UTF-8',
+          'Accept': 'application/json'
+        },
+        data:{userId:id}
+      })
     }
     setId(data)
-    //console.log(data)
-    /*const queryInfo = {active: true, lastFocusedWindow: true};
-    chrome.tabs && chrome.tabs.query(queryInfo, tabs => {
-      const url = tabs[0].url;
-      setUrl(url);
-    });*/
-    /*const response = await axios({
-      url: `http://localhost:3001/addUser`,
-      method:"POST",
-      headers:{
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Accept': 'application/json'
-      },
-      data:{userId:id}
-    })
-    response = await axios({
-      url: `http://localhost:3001/getUser`,
-      method:"GET",
-      headers:{
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Accept': 'application/json'
-      },
-    })
-    console.log(response)*/
   },[])
 
   const add_rating = async () => {
