@@ -4,14 +4,15 @@ import { Button, Rate } from 'antd'
 import axios from 'axios'
 import Report from './Report'
 import { getStorageData, setStorageData, getCurrentTabUrl } from "../chrome/utils";
+import Info from './info.svg'
+import Verify from './verified.svg'
 
 const Landing = () => {
 
-  //global chrome
-  //document.title
-  //window.location.href
   const [reportFlag, setReportFlag] = React.useState(false)
-  const [url, setUrl] = React.useState('');
+  const [token, setToken] = React.useState(100)
+  const [dollar, setDollar] = React.useState(2)
+  const [url, setUrl] = React.useState('')
   const [rate, setRate] = React.useState(0)
   const [id, setId] = React.useState("")
 
@@ -71,7 +72,7 @@ const Landing = () => {
       "url": url,
       "rating": rate,
     }
-    console.log(data)
+    
     try{
       const response = await axios({
         url: `https://icdrive-backend.herokuapp.com/addRating`,
@@ -83,6 +84,8 @@ const Landing = () => {
         data:data
       })
       setRate(0)
+      setToken(token+1)
+      setDollar(dollar+0.1)
     } catch(error){
       console.log(error)
     }
@@ -96,20 +99,25 @@ const Landing = () => {
             <Report setReportFlag={setReportFlag} id={id}/>
             :
             <div>
-              <p className="heading cent">0xC88C....CE7b</p>
+              <div className="topBar">
+                <img src={Verify}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div className="heading">0xC88C....CE7b</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <img src={Info}/>
+              </div>
+              <hr className="horizontal"/>
               <div className="centerPortion">
                 <p className="token cent">
-                  100.0
+                  {token}
                 </p>
-                <p className="cent">
-                  $1.0
+                <p className="dollar cent">
+                  ${dollar}
                 </p>
               </div>
               <p className="cent">
                 <Rate value={rate} onChange={setRate} />
               </p>
               <div className="bottomPortion">
-                <Button type="primary" onClick={add_rating} >Rate</Button>&nbsp;&nbsp;
+                <Button type="primary" onClick={add_rating} >Rate</Button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <Button type="primary" onClick={()=>setReportFlag(1)} danger>Report</Button>
               </div>
             </div>
@@ -123,19 +131,32 @@ export default Landing;
 
 const Style = styled.div`
   
+  .topBar{
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .heading{
-    padding-top: 10px;
     font-size: 18px;
+  }
+  .horizontal{
+    height: 1px;
+    width: 100%;
+    background-color: #000;
+  }
+  .centerPortion{
+    padding-top: 10px;
   }
   .cent{
     text-align: center;
   }
   .token{
     font-weight: 600;
-    font-size: 18px;
+    font-size: 24px;
   }
-  .centerPortion{
-    padding-top: 5px;
+  .dollar{
+    font-size: 18px;
   }
   .bottomPortion{
     margin-top: 20px;

@@ -64,7 +64,7 @@ const Report = ({setReportFlag, id}) => {
         </Radio.Group>
         </div>
         <div className="bottomPortion">
-          <Button type="primary" onClick={()=>{setReportFlag(0)}} >Back</Button>&nbsp;&nbsp;
+          <Button type="primary" onClick={()=>{setReportFlag(0)}} >Back</Button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <Button type="primary" onClick={submit} danger>Submit</Button>
         </div>
     </Style>
