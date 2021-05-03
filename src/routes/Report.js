@@ -3,7 +3,7 @@ import axios from 'axios'
 import styled from 'styled-components'
 import { Button, Radio, Input, Space } from 'antd'
 
-const Report = ({setReportFlag, id}) => {
+const Report = ({setReportFlag, id, url}) => {
 
   const [value, setValue] = React.useState(1)
   const [text, setText] = React.useState("")
@@ -28,7 +28,7 @@ const Report = ({setReportFlag, id}) => {
     const data = {
       "reportReason": reason,
       "userId": id,
-      "url": window.location.href,
+      "url": url,
       "reasonType": value
     }
     console.log(data)

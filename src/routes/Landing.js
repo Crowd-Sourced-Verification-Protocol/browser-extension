@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { Button, Rate } from 'antd'
 import axios from 'axios'
 import Report from './Report'
+import Review from './Review'
 import { getStorageData, setStorageData, getCurrentTabUrl } from "../chrome/utils";
 import Info from './info.svg'
 import Verify from './verified.svg'
@@ -16,39 +17,39 @@ const Landing = () => {
   const [rate, setRate] = React.useState(0)
   const [id, setId] = React.useState("")
 
-  const getRandomToken = () =>{
+  const getRandomToken = () => {
     // E.g. 8 * 32 = 256 bits token
     var randomPool = new Uint8Array(32);
     crypto.getRandomValues(randomPool);
     var hex = '';
     for (var i = 0; i < randomPool.length; ++i) {
-        hex += randomPool[i].toString(16);
+      hex += randomPool[i].toString(16);
     }
     // E.g. db18458e2782b2b77e36769c569e263a53885a9944dd0a861e5064eac16f1a
     return hex.toString();
   }
 
-  React.useEffect(async ()=>{
+  React.useEffect(async () => {
     getCurrentTabUrl((url) => {
       setUrl(url || 'undefined');
     })
     let data = getStorageData()
     console.log(data)
-    if(!data){
+    if (!data) {
       data = getRandomToken()
       setStorageData(data)
       const response = await axios({
         url: `https://icdrive-backend.herokuapp.com/addUser`,
-        method:"POST",
-        headers:{
+        method: "POST",
+        headers: {
           'Content-Type': 'application/json;charset=UTF-8',
           'Accept': 'application/json'
         },
-        data:{userId:id}
+        data: { userId: id }
       })
     }
     setId(data)
-  },[])
+  }, [])
 
   const add_rating = async () => {
     const data = {
@@ -56,59 +57,63 @@ const Landing = () => {
       "url": url,
       "rating": rate,
     }
-    
-    try{
+
+    try {
       const response = await axios({
         url: `https://icdrive-backend.herokuapp.com/addRating`,
-        method:"POST",
-        headers:{
+        method: "POST",
+        headers: {
           'Content-Type': 'application/json;charset=UTF-8',
           'Accept': 'application/json'
         },
-        data:data
+        data: data
       })
       setRate(0)
-      setToken(token+1)
-      setDollar(dollar+0.1)
-    } catch(error){
+      setToken(token + 1)
+      setDollar(dollar + 0.1)
+    } catch (error) {
       console.log(error)
     }
   }
 
-  return (
+  if (reportFlag == 1) {
+    return (<div className="landing"><Report setReportFlag={setReportFlag} id={id} url={url} /></div>)
+  } else if (reportFlag == 0) {
+    return (
       <Style>
         <div className="landing">
-          {
-            reportFlag?
-            <Report setReportFlag={setReportFlag} id={id}/>
-            :
-            <div>
-              <div className="topBar">
-                <img src={Verify}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <div>
+            <div className="topBar">
+              <img src={Verify} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <div className="heading">0xC88C....CE7b</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <img src={Info}/>
-              </div>
-              <hr className="horizontal"/>
-              <div className="centerPortion">
-                <p className="token cent">
-                  {token}
-                </p>
-                <p className="dollar cent">
-                  ${dollar}
-                </p>
-              </div>
-              <p className="cent">
-                <Rate value={rate} onChange={setRate} />
-              </p>
-              <div className="bottomPortion">
-                <Button type="primary" onClick={add_rating} >Rate</Button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <Button type="primary" onClick={()=>setReportFlag(1)} danger>Report</Button>
-              </div>
+                <img src={Info} />
             </div>
-          }
+            <hr className="horizontal" />
+            <div className="centerPortion">
+              <p className="token cent">
+                {token} COINS
+              </p>
+              <p className="dollar cent">
+                ${dollar}
+              </p>
+            </div>
+            <p className="cent">
+              <Rate style={{ backgroundColor: 'black', padding: '5px', borderRadius: '5px' }} value={rate} onChange={setRate} />
+            </p>
+            <div className="bottomPortion">
+              <Button type="primary" onClick={add_rating} >Rate</Button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <Button type="primary" onClick={() => setReportFlag(1)} danger>Report</Button>
+            </div>
+            <div className="bottomPortion">
+              <Button style={{ color: 'white', backgroundColor: '#fc7703' }} onClick={() => setReportFlag(2)}>Review</Button>
+            </div>
+          </div>
         </div>
       </Style>
-  );
+    )
+  } else {
+    return (<div className="landing"><Review setReportFlag={setReportFlag} id={id} /></div>)
+  }
 }
 
 export default Landing;
@@ -147,5 +152,6 @@ const Style = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 10px;
   }
 `
